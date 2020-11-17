@@ -3,7 +3,7 @@ const app = express();
 const socketio = require("socket.io");
 const http = require("http");
 const router = require("./router");
-const { addUser, removeUser, getUser, getUsersInRoom } = require("./users.js");
+const { addUser, removeUser, getUser, users } = require("./users.js");
 const { isError } = require("util");
 const PORT = process.env.PORT || 5000;
 
@@ -16,22 +16,22 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join", ({ name, room }, callback) => {
-    const { error, user } = addUser({ id: socket.id, name, room });
+  socket.on("join", ({ name, team }, callback) => {
+    const { error, user } = addUser({ id: socket.id, name, team });
+  
     if (error) return callback(error);
 
     socket.emit("message", {
-      user: "admin",
-      text: `${user.name}, welcome to the room ${user.room}`,
+      user: "Kent",
+      text: `${user.name}, welcome to Shoutouts. Get ready to have some fun.`,
     });
 
     socket.broadcast
-      .to(user.room)
       .emit("message", { user: "admin", text: `${user.name} has joined!` });
 
-    socket.join(user.room);
+    socket.join(team);
 
-    io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
+    io.emit('roomData', users);
 
     callback();
   });
@@ -39,26 +39,28 @@ io.on("connection", (socket) => {
   socket.on("sendMessage", (message, callback) => {
     const user = getUser(socket.id);
 
-    io.to(user.room).emit("message", { user: user.name, text: message });
-    io.to(user.room).emit("roomData", { room: user.room, users: getUsersInRoom(user.room) });
+    io.emit("message", { user: user.name, text: message });
+    // what is rommData??
+    io.emit('roomData', users);
 
     callback();
   });
 
-  socket.on("disconnect", () => {
-    const user = removeUser(socket.id);
 
-    if (user) {
-      io.to(user.room).emit("message", {
-        user: "Admin",
-        text: `${user.name} has left.`,
-      });
-      io.to(user.room).emit("roomData", {
-        room: user.room,
-        users: getUsersInRoom(user.room),
-      });
-    }
-  });
+  // socket.on("disconnect", () => {
+  //   const user = removeUser(socket.id);
+
+  //   if (user) {
+  //     io.to(user.room).emit("message", {
+  //       user: "Admin",
+  //       text: `${user.name} has left.`,
+  //     });
+  //     io.to(user.room).emit("roomData", {
+  //       room: user.room,
+  //       users: getUsersInRoom(user.room),
+  //     });
+  //   }
+  // });
 });
 
 app.use(router);
