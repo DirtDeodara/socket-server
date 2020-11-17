@@ -16,8 +16,8 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join", ({ name, team }, callback) => {
-    const { error, user } = addUser({ id: socket.id, name, team });
+  socket.on("join", ({ name }, callback) => {
+    const { error, user } = addUser({ id: socket.id, name });
   
     if (error) return callback(error);
 
@@ -28,8 +28,6 @@ io.on("connection", (socket) => {
 
     socket.broadcast
       .emit("message", { user: "admin", text: `${user.name} has joined!` });
-
-    socket.join(team);
 
     io.emit('roomData', users);
 

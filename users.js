@@ -2,14 +2,13 @@ const users = [];
 
 const addUser = ({ id, name, team }) => {
   name = name.trim().toLowerCase();
-  team = team.trim().toLowerCase();
+  // team = team.trim().toLowerCase();
 
   const existingUser = users.find((user) => user.name === name);
 
   if(!name) return { error: 'Username is required.' };
-  if(existingUser) return { error: 'Username is taken.' };
 
-  const user = { id, name, team };
+  const user = { id, name };
 
   users.push(user);
 
