@@ -29,17 +29,15 @@ io.on("connection", (socket) => {
     socket.broadcast
       .emit("message", { user: "admin", text: `${user.name} has joined!` });
 
-    // socket.join(team);
-
     io.emit('roomData', users);
 
     callback();
   });
 
-  socket.on("sendMessage", (message, callback) => {
+  socket.on("sendShoutout", (shoutout, callback) => {
     const user = getUser(socket.id);
 
-    io.emit("message", { user: user.name, text: message });
+    io.emit("shoutout", { user: user.name, ...shoutout });
     // what is rommData??
     io.emit('roomData', users);
 
