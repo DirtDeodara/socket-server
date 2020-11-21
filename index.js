@@ -21,9 +21,16 @@ io.on("connection", (socket) => {
   
     if (error) return callback(error);
 
-    socket.emit("message", {
-      user: "Kent",
-      text: `${user.name}, welcome to Shoutouts. Get ready to have some fun.`,
+    // socket.emit("message", {
+    //   user: "Kent",
+    //   text: `${user.name}, welcome to Shoutouts. Get ready to have some fun.`,
+    // });
+
+    const capitalizedName = user.name.charAt(0).toUpperCase() + user.name.slice(1)
+
+    socket.emit("welcomeMessage", {
+      sender: "Kent",
+      text: `${capitalizedName}, welcome to Shoutouts. Get ready to have some fun.`,
     });
 
     socket.broadcast
