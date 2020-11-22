@@ -24,26 +24,26 @@ io.on("connection", (socket) => {
 
     if (error) return callback(error);
 
-    socket.emit("adminMessage", {
+    socket.emit("chatMessage", {
       author: "Kent",
       text: `${capitalizedName(user.name)}, welcome to Shoutouts. Get ready to have some fun.`,
-      type: "message"
+      variant: "chat"
     });
 
-    socket.broadcast.emit("adminMessage", {
-        author: "Admin",
-        text: `${capitalizedName(user.name)} has joined!`,
-        type: "message"
+    socket.broadcast.emit("chatMessage", {
+      author: "Admin",
+      text: `${capitalizedName(user.name)} has joined!`,
+      variant: "chat"
     });
 
     // io.emit('roomData', users);
 
     // if everyone joins at more-or-less the same time, then sending to individuals rather than broadcasting should be fine
     setInterval(() => {
-      socket.emit('adminMessage', {
+      socket.emit('chatMessage', {
         author: "Kent",
         text: "Hey, team! Check out our new branching strategy.",
-        type: "message"
+        variant: "chat"
       });
       // TODO: increase time of interval
     }, 100000);
@@ -54,10 +54,10 @@ io.on("connection", (socket) => {
   // problem: doesn't know when to start interval so executes multiple instances at once
   // const sendBranchingStrategyMessage = () => {
   //   setInterval(() => {
-  //     socket.broadcast.emit('adminMessage', {
+  //     socket.broadcast.emit('chatMessage', {
   //       author: "Kent",
   //       text: "Hey, team! Check out our new branching strategy.",
-  //       type: "message"
+  //       variant: "chat"
   //     });
   //   }, 10000);
   // }
@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
   socket.on("sendShoutout", (shoutout, callback) => {
     const user = getUser(socket.id);
 
-    io.emit("shoutout", { user: user.name, type: "shoutout", ...shoutout });
+    io.emit("shoutout", { user: user.name, variant: "shoutout", ...shoutout });
     // what is rommData??
     io.emit('roomData', users);
 
@@ -77,10 +77,10 @@ io.on("connection", (socket) => {
     const user = removeUser(socket.id);
 
     if (user) {
-      io.emit("adminMessage", {
+      io.emit("chatMessage", {
         author: "Admin",
         text: `${capitalizedName(user.name)} has left.`,
-        type: "message"
+        variant: "chat"
       });
     }
   });
