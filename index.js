@@ -73,7 +73,22 @@ io.on("connection", (socket) => {
     })
 
     callback();
-  })
+  });
+
+  socket.on("incrementEmojiCount", (emoji, callback) => {
+    const user = getUser(socket.id);
+    const capitalizedUserName = capitalizedName(user.name);
+
+    io.emit("emoji", {
+      user: capitalizedUserName,
+      variant: "emoji",
+      ...emoji
+    })
+
+    if (callback) {
+      callback();
+    }
+  });
 
   socket.on("disconnect", () => {
     const user = removeUser(socket.id);
