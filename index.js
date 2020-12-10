@@ -16,24 +16,21 @@ const io = require("socket.io")(server, {
   },
 });
 
-const capitalizedName = (name) => name.charAt(0).toUpperCase() + name.slice(1)
-
 io.on("connection", (socket) => {
   socket.on("join", ({ name }, callback) => {
     const { error, user } = addUser({ id: socket.id, name });
-    const capitalizedUserName = capitalizedName(user.name);
 
     if (error) return callback(error);
 
     socket.emit("chatMessage", {
       author: "Kent",
-      text: `${capitalizedUserName}, welcome to Shoutouts. Get ready to have some fun.`,
+      text: `${user.name}, welcome to Shoutouts. Get ready to have some fun.`,
       variant: "chat"
     });
 
     socket.broadcast.emit("chatMessage", {
       author: "Admin",
-      text: `${capitalizedUserName} has joined!`,
+      text: `${user.name} has joined!`,
       variant: "chat"
     });
 
@@ -52,10 +49,9 @@ io.on("connection", (socket) => {
 
   socket.on("sendShoutout", (shoutout, callback) => {
     const user = getUser(socket.id);
-    const capitalizedUserName = capitalizedName(user.name);
 
     io.emit("shoutout", {
-      user: capitalizedUserName,
+      user: user.name,
       variant: "shoutout",
       ...shoutout
     });
@@ -65,10 +61,9 @@ io.on("connection", (socket) => {
 
   socket.on("sendReply", (comment, callback) => {
     const user = getUser(socket.id);
-    const capitalizedUserName = capitalizedName(user.name);
 
     io.emit("comment", {
-      user: capitalizedUserName,
+      user: user.name,
       variant: "comment",
       ...comment
     })
@@ -78,10 +73,9 @@ io.on("connection", (socket) => {
 
   socket.on("incrementEmojiCount", (emoji, callback) => {
     const user = getUser(socket.id);
-    const capitalizedUserName = capitalizedName(user.name);
 
     io.emit("emoji", {
-      user: capitalizedUserName,
+      user: user.name,
       variant: "emoji",
       ...emoji
     })
@@ -93,12 +87,11 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     const user = removeUser(socket.id);
-    const capitalizedUserName = capitalizedName(user.name);
 
     if (user) {
       io.emit("chatMessage", {
         author: "Admin",
-        text: `${capitalizedUserName} has left.`,
+        text: `${user.name} has left.`,
         variant: "chat"
       });
     }
