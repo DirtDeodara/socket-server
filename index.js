@@ -6,11 +6,12 @@ const router = require("./router");
 const { addUser, removeUser, getUser, users } = require("./users.js");
 require("util");
 const PORT = process.env.PORT || 5000;
+const ORIGIN = process.env.ORIGIN || "http://localhost:3000";
 
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: ORIGIN,
     methods: ["GET", "POST"],
   },
 });
@@ -24,24 +25,40 @@ io.on("connection", (socket) => {
     socket.emit("chatMessage", {
       author: "Kent",
       text: `${user.name}, welcome to Shoutouts. Get ready to have some fun.`,
-      variant: "chat"
+      variant: "chat",
     });
 
     socket.broadcast.emit("chatMessage", {
       author: "Admin",
       text: `${user.name} has joined!`,
-      variant: "chat"
+      variant: "chat",
     });
 
-    // if everyone joins at more-or-less the same time, then sending to individuals rather than broadcasting should be fine
-    setInterval(() => {
-      socket.emit('chatMessage', {
-        author: "Kent",
-        text: "Hey, team! Check out our new branching strategy.",
-        variant: "chat"
-      });
-      // TODO: increase time of interval
-    }, 100000);
+    const teamsMessages = [
+      "Hello, folks! Id like to introduce you to our newest team, Team Cerberus.",
+      "Wow! We're really growing now! Welcome Team Minotaur!",
+      "Driveway is really taking off! Welcome Team Sphinx!",
+      "Our competitors can't slow our roll. We've added another team, Team Chimera.",
+      "Here we go. Welcome Team Hydra, our newest Driveway Team.",
+      "Geez, still growing. Alrighty then, welcome Team Cyclopes.",
+      "Alright, who's gonna update the Org Chart this time?... Welcome Team Gorgon.",
+    ];
+    
+    let i = 0;
+    const myLoop = () => {
+      setTimeout(function () {
+          socket.emit("chatMessage", {
+            author: "Kent",
+            text: teamsMessages[i],
+            variant: "chat",
+          });
+        i++;
+        if (i < teamsMessages.length) {
+          myLoop();
+        }
+      }, 600000); // 10 minutes
+    }
+    myLoop();
 
     callback();
   });
@@ -52,9 +69,9 @@ io.on("connection", (socket) => {
     io.emit("shoutout", {
       user: user.name,
       variant: "shoutout",
-      ...shoutout
+      ...shoutout,
     });
-    
+
     callback();
   });
 
@@ -64,8 +81,8 @@ io.on("connection", (socket) => {
     io.emit("comment", {
       user: user.name,
       variant: "comment",
-      ...comment
-    })
+      ...comment,
+    });
 
     callback();
   });
@@ -76,8 +93,8 @@ io.on("connection", (socket) => {
     io.emit("emoji", {
       user: user.name,
       variant: "emoji",
-      ...emoji
-    })
+      ...emoji,
+    });
 
     if (callback) {
       callback();
@@ -91,7 +108,7 @@ io.on("connection", (socket) => {
       io.emit("chatMessage", {
         author: "Admin",
         text: `${user.name} has left.`,
-        variant: "chat"
+        variant: "chat",
       });
     }
   });
