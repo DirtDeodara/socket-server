@@ -40,7 +40,7 @@ io.on("connection", (socket) => {
       "Hey, everyone! Checkout the new Teams channel 'For the love of Flaming Puck Unicycle Hockey'.",
       "Wow! We're really growing now! Welcome Team Minotaur!",
       "Our competitors can't slow our roll. We've added another team. Team Chimera.",
-      "Hey, everyone! Checkout the new Teams channel 'For the love of Tag Team Badger Wrestling'.",
+      "Hey, everyone! Checkout the new Teams channel 'For the love of Tag Team Jello Wrestling'.",
       "Driveway is really taking off! Welcome Team Hydra!",
       "Hey, everyone! Checkout the new Teams channel 'For the love of Coming Up With New Branching Strategies'.",
       "Geez, still growing, huh? Alrighty then, welcome Team Cyclops!",
