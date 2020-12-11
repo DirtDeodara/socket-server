@@ -23,25 +23,28 @@ io.on("connection", (socket) => {
     if (error) return callback(error);
 
     socket.emit("chatMessage", {
-      author: "Kent",
+      author: "",
       text: `${user.name}, welcome to Shoutouts. Get ready to have some fun.`,
       variant: "chat",
     });
 
     socket.broadcast.emit("chatMessage", {
-      author: "Admin",
+      author: "",
       text: `${user.name} has joined!`,
       variant: "chat",
     });
 
     const teamsMessages = [
-      "Hello, folks! Id like to introduce you to our newest team, Team Cerberus.",
+      "Hey, everyone! Checkout the new Teams channel 'For the love of Professional Moose Grooming'.",
+      "Hello, folks! I'd like to introduce you to our newest Driveway team, Team Cerberus.",
+      "Hey, everyone! Checkout the new Teams channel 'For the love of Flaming Puck Unicycle Hockey'.",
       "Wow! We're really growing now! Welcome Team Minotaur!",
-      "Driveway is really taking off! Welcome Team Sphinx!",
-      "Our competitors can't slow our roll. We've added another team, Team Chimera.",
-      "Here we go. Welcome Team Hydra, our newest Driveway Team.",
-      "Geez, still growing. Alrighty then, welcome Team Cyclopes.",
-      "Alright, who's gonna update the Org Chart this time?... Welcome Team Gorgon.",
+      "Our competitors can't slow our roll. We've added another team. Team Chimera.",
+      "Hey, everyone! Checkout the new Teams channel 'For the love of Tag Team Jello Wrestling'.",
+      "Driveway is really taking off! Welcome Team Hydra!",
+      "Hey, everyone! Checkout the new Teams channel 'For the love of Coming Up With New Branching Strategies'.",
+      "Geez, still growing, huh? Alrighty then, welcome Team Cyclops!",
+      "Alright, who's gonna update the Org Chart this time?...Whatever, welcome Team Gorgon.",
     ];
     
     let i = 0;
