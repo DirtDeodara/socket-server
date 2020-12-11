@@ -109,7 +109,7 @@ io.on("connection", (socket) => {
 
     if (user) {
       io.emit("chatMessage", {
-        author: "Admin",
+        author: "",
         text: `${user.name} has left.`,
         variant: "chat",
       });
